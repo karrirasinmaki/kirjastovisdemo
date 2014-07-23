@@ -1,0 +1,557 @@
+<!doctype html>
+<html class="no-js" lang="fi"> <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kirjastohankkeet demo</title>
+	<!--	
+		<style type="text/css" media="all">@import url("http://hankkeet.kirjastot.fi/modules/system/system.base.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/system/system.menus.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/system/system.messages.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/system/system.theme.css?n447my");</style>
+<!--
+<style type="text/css" media="all">@import url("http://hankkeet.kirjastot.fi/modules/comment/comment.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/date/date_api/date.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/date/date_popup/themes/datepicker.1.7.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/field/theme/field.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/hanki/hanke-node-form.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/node/node.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/search/search.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/user/user.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/views/css/views.css?n447my");</style>
+<!--
+<style type="text/css" media="all">@import url("http://hankkeet.kirjastot.fi/sites/all/libraries/cluetip/jquery.cluetip.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/ctools/css/ctools.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/panels/css/panels.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/libraries/superfish/css/superfish.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/libraries/superfish/css/superfish-vertical.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/libraries/superfish/css/superfish-navbar.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/tagadelic/tagadelic.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/panels/plugins/layouts/flexible/flexible.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/modules/quicktabs/css/quicktabs.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/default/files/ctools/css/292a027f85c85f2cb6865142f41b62fa.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/libraries/superfish/style/default.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/modules/locale/locale.css?n447my");</style>
+@import url("http://hankkeet.kirjastot.fi/sites/default/files/color/hanki-7b67311a/colors.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/themes/bartik/css/style.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/themes/hanki/css/hanki.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/themes/bartik/css/layout.css?n447my");
+@import url("http://hankkeet.kirjastot.fi/sites/all/themes/hanki/css/hanki.css?n447my");
+-->
+<style type="text/css" media="all">
+
+</style>
+<!--
+<style type="text/css" media="print">
+@import url("http://hankkeet.kirjastot.fi/themes/bartik/css/print.css?n447my");
+</style>
+-->
+    <link rel="stylesheet" href="css/foundation.css" />
+		<link rel="stylesheet" href="css/sumoselect.css" />
+		<link rel="stylesheet" href="css/chosen.css" />
+<!--    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+		<link href="css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,300,400,700,600' rel='stylesheet' type='text/css'>
+    <script src="js/vendor/modernizr.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>-->
+    <script>
+//      WebFont.load({
+//        google: {
+//          families: ['Open Sans']
+//        }
+//      });
+    </script>
+    <script type="text/javascript">
+      function export_svg() {
+        $('svg').svg();
+        var xml = $('svg').svg('get').toSVG();
+        $('#svgexport').html(xml.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+      }
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/large.css">
+		<link rel="stylesheet" media="screen and (min-device-width: 1400px)" href="css/large.css" />
+		<link rel="stylesheet" media="screen and (max-device-width: 1300px)" href="css/medium.css" />
+  </head>
+	<body id='kirjastovis_container'>
+	<div id="kif">
+	      <iframe width="100%" height="44" frameborder="0" scrolling="no" src="http://gfx.kirjastot.fi/kifi/kifi-banner-pro-fi.html">
+        </iframe>
+	</div>
+		<div id="header" class="without-secondary-menu">
+     <div id="ylapalkki">
+			 <div id="name-and-slogan">
+
+                    <h1 id="site-name">
+              <a href="/?language=fi" title="Etusivu" rel="home">
+              <span>Hankerekisterin<br/><b/>Visualisointi</span></a>            </h1>      
+       </div> <!-- /#name-and-slogan -->
+       <div id="viz_nav_container">			   
+          <div id="viz_nav_inner_container">
+						<div class="viz_nav btn" data-name="teema">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Teemoittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="vaikutusalue">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Vaikutusalueittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="maakunta">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Maakunnittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="kunta">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Kunnittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="amount">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Koon mukaan</div>
+            </div>
+						<div class="viz_nav btn" data-name="tyyppi">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Hanketyypeitt&auml;in</div>
+            </div>
+          </div>
+		    </div>				
+				<div id="viz_nav_container">				
+	<!--					<div id="multiple">
+						<select multiple="multiple" name="somename" class="testselect3">
+        						<option value="erityisryhm‰t">Erityisryhm‰t</option>
+       							<option value="ik‰‰ntyneet">Ik‰‰ntyneet</option>
+       							<option value="kirjaston asiakkaat">Kirjaston asiakkaat</option>
+       							<option value="kirjaston ei-k‰ytt‰j‰t">Kirjaston ei-k‰ytt‰j‰t</option>
+       							<option value="kirjaston henkilˆkunta">Kirjaston henkilˆkunta</option>
+       							<option value="lapset (alle 13 v.)">Lapset (alle 13 v.)</option>
+       							<option value="lapsiperheet">Lapsiperheet</option>
+       							<option value="nuoret">Nuoret</option>
+       							<option value="nuoret aikuiset">Nuoret aikuiset</option>
+										<option value="nuoret aikuiset">Nuoret aikuiset</option>
+										<option value="nuoret aikuiset">Nuoret aikuiset</option>
+										<option value="nuoret aikuiset">Nuoret aikuiset</option>
+										<option value="nuoret aikuiset">Nuoret aikuiset</option>
+										<option value="nuoret aikuiset">Nuoret aikuiset</option>
+    				</select>
+						</div> -->
+						<div id="multiple">
+          	  <select data-placeholder="Tarkatele kohderyhmitt&auml;in" class="chosen-select" style="width:230px;" tabindex="2">
+                    <option value=""></option>
+  									<option value="t">Kaikki</option>
+										<option value="erityisryhm&auml;t">Erityisryhm&auml;t</option>
+       							<option value="ik&auml;&auml;ntyneet">Ik&auml;&auml;ntyneet</option>
+       							<option value="kirjaston asiakkaat">Kirjaston asiakkaat</option>
+       							<option value="kirjaston ei-k&auml;ytt&auml;j&auml;t">Kirjaston ei-k&auml;ytt&auml;j&auml;t</option>
+       							<option value="kirjaston henki">Kirjaston henkil&ouml;kunta</option>
+       							<option value="lapsiperheet">Lapsiperheet</option>
+										<option value="alle 13 v">Lapset (alle 13 v.)</option>
+       							<option value="13-19">Nuoret (13-19 v.)</option>
+       							<option value="19.-29">Nuoret aikuiset (19-29 v.)</option>
+										<option value="ammattiryhm">Tietty ammattiryhm√§ (esim. opettajat)</option>
+										<option value="Ty√∂ik√§inen v√§est√∂">Ty√∂ik√§inen v√§est√∂</option>
+										<option value="Maahanmuuttajat">Maahanmuuttajat</option>
+										<option value="Ty√∂tt√∂m√§t">Ty√∂tt√∂m√§t</option>
+										<option value="Sidosryhm√§t">Sidosryhm√§t</option>
+										<option value="muu">Muu</option>
+						</select>
+						</div>
+						<div id="kieli">
+						<p><a href="http://hankevis.net" title="Hyv‰t k‰yt‰nnˆt">Suomi</a> / <a href="http://hankevis.net" title="Hankkeet, joille ei myˆnnetty tukea">Svenska</a></p>
+						</div>
+						<div id="search_section" class="control">
+								 <form id="search_form" action="" method="post">
+								 <p class="search_title"><input type="testi" class="tftextinput2" id="search" value="Etsi hanketta"/></p>
+								 </form>
+								 <div class="tfclear"></div>
+						</div>
+	<!--					<p>Search String: <span id="str">N/A</span> -->
+			  </div> 
+     </div>
+		</div>
+<!--  <body id='kirjastovis_container'>
+<!--    <a href="http://gfx.kirjastot.fi/kifi/kifi-banner-pro-fi.html"><img style="position: absolute; top: 65px; left: 0; border: 0;" src="http://gfx.kirjastot.fi/kifi/kifi-banner-pro-fi.html" alt="xxx"></a>
+    {% include nav.html %} -->
+<!-- 		
+    <div class="row">
+        <div id="viz_nav_container">
+          <div id="viz_nav_inner_container">
+						<div class="viz_nav btn" data-name="teema">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Teemoittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="vaikutusalue">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Vaikutusalueittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="maakunta">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Maakunnittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="kunta">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Kunnittain</div>
+            </div>
+            <div class="viz_nav btn" data-name="amount">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Koon mukaan</div>
+            </div>
+						<div class="viz_nav btn" data-name="tyyppi">
+              <div class="sub_header">Tarkastele</div>
+              <div class="header">Hanketyypeitt&auml;in</div>
+            </div>
+          </div>
+<!-- 				<div class="row"> 
+<!-- 				</div> -->
+<!--				<div id="viz_nav_container">
+            <form id="myForm">
+									<h6>Tarkastele kohderyhmitt&auml;in:</h6>
+									<input type="checkbox" name="radioName" value=";" /> Kaikki
+									<input type="checkbox" name="radioName" value="nuoret" /> Nuoret
+									<input type="checkbox" name="radioName" value="vanhukset" /> Vanhukset
+									<input type="checkbox" name="radioName" value="lapset" /> Lapset
+									<input type="checkbox" name="radioName" value="asiakkaat" /> Asiakkaat
+									<input type="checkbox" name="radioName" value="henkilˆkunta" /> Henkil&ouml;kunta
+						</form>
+						<div id="search_section" class="control">
+								 <form id="search_form" action="" method="post">
+								 <p class="search_title"> Etsi hanketta nimelt&auml;: <input type="text" class="text-input" id="search" value=""/></p>
+								 </form>
+						</div>
+						<p>Search String: <span id="str">N/A</span>
+
+			  </div>
+      </div>
+    </div>
+
+    <br /> -->
+    <div class="row full-width">
+      <div id="vis-container" class="large-12 columns">
+			    <div id='right-sidebar'>
+<!--					   <h2>
+                        V&auml;rit:</h2>
+						<div>
+            <select id='color-everything-by'>
+                            <option value=''></option>
+                        </select></div>
+			       <div> -->
+                 <a id='right-sidebar-toggle' <!-- href='#'>V&auml;rit (piilota klikkaamalla) --> </a>
+							 
+             </div>
+             <div id='right-sidebar-container'>
+						   <h5> Vaihda v&auml;rityst&auml;:</h5>
+						 <div>
+              <select id='color-everything-by'>						
+                 <option value=''></option>
+                 </select></div>
+							<div id='right-sidebar-color-container'>
+							</div>
+						 
+<!--        <div id="vis"></div>
+<!--				  <div id='right-sidebar'>
+<!--             <h2>V&auml;rit:</h2>
+						<div>
+              <select id='color-everything-by'>
+                 <option value=''></option>
+              </select></div>
+            </div>-->
+<!--						  <div>
+                 <a id='right-sidebar-toggle' href='#'>V&auml;rikoodit</a>
+              </div>
+                  <div id='right-sidebar-container'>
+                  </div>
+          </div> -->
+				  </div>
+  				  
+  				  
+					<div id="vis"></div>
+					  <div class="panel">
+								 <h5>Ohje-paneeli</h5>
+								 <p>Tervetuloa yleisten kirjastojen hankerekisterin visualisointiin. Visualisoinnin avulla voit tutustua kirjastojen kehitt&auml;mishankkeisiin. </p>
+
+								 <h5>Kuinka visualisointi toimii</h5>
+								 <p>Yksi pallo edustaa yht‰ hanketta. Pallon koko kertoo, kuinka paljon avustusta hankkeelle on myˆnnetty. Viem‰ll‰ hiirenosoittominen pallon
+							     p‰‰lle saa hankkeesta lis‰tietoa. Palloa klikkaamalla p‰‰see hankkeen nettisivuille</p> 
+									<p>Hankkeiden jakumaa voi muuttaa yl‰palkin "tarkastele"-valikoista. V‰rityst‰ voi muuttaa vasemmalla olevasta valikosta. Hankkeiden kohderyhmi‰ voi myˆs tarkastella yl‰-valikossa olevasta xxxxx. Etsi-toiminnolla voi etsi‰ hanketta nimelt‰. <p/>
+	
+								 <h5>Tutustu my&ouml;s muihin visualisointeihin</h5>
+								 <p><a href="http://hankevis.net" title="Hyv‰t k‰yt‰nnˆt">Hyv&auml;t k&auml;yt&auml;nn&ouml;t</a>.</p>
+								 <p><a href="http://hankevis.net" title="Hankkeet, joille ei myˆnnetty tukea">Hankkeet, joille ei my&ouml;nnetty tukea</a>.</p>
+<!--
+<div style="clear:both;"></div>
+<div class="columns">
+	<div class="colleft">
+	<h5>Tutustu myˆs muihin visualisointeihin</h5>
+		<ul>
+			<li><a href="http://spyrestudios.com/" title="home">Hyv‰t k‰yt‰nnˆt</a></li>
+			<br/>
+			<li><a href="http://spyrestudios.com/about/" title="about">Kielteisen p‰‰tˆksen saaneet hankkeet</a></li>
+		</ul>
+	</div>
+
+	<div class="colright">
+		<h3>Social Stuff</h3>
+		<ul>
+			<li><a href="http://twitter.com/jophillips" title="Twitter">Twitter</a></li>
+			<li><a href="http://designbump.com/user/147" title="DesignBump">DesignBump</a></li>
+			<li><a href="http://digg.com/users/jophillips" title="Digg">Digg</a></li>
+			<li><a href="http://delicious.com/jon.phillips" title="Del.Icio.Us">Del.Icio.Us</a></li>
+			<li><a href="http://designmoo.com/users/jonphillips" title="DesignMoo">DesignMoo</a></li>
+		</ul>
+	</div> -->
+				 		 		<p>Visualisoinnin toteuttaja <a href="http://hankevis.net" color="white" title="Vissee Oy">Vivid Information Oy</a>.</p>
+								<p>Search String: <span id="str">N/A</span>
+<!--						</div>
+                
+
+						<div style="clear:both;"></div> -->
+
+						</div>
+						<a class="trigger" href="#">INFO</a>
+					  
+      </div>
+    </div>
+					
+		
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> 	
+<!--    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script type="text/javascript" src="js/vendor/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.svg.js"></script>
+    <script type="text/javascript" src="js/foundation.min.js"></script> -->
+<!--		<script src="js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="js/dat.gui.min.js"></script>
+    <script type="text/javascript" src="js/d3.v3.js"></script>
+    -->
+    <script type="text/javascript" src="js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/d3.tip.v0.6.3.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile.custom.min.js"></script>
+    <script type="text/javascript" src="js/libs/jquery.animate-colors-min.js"></script>
+		<script type="text/javascript" src="js/chosen.jquery.min.js" ></script>
+
+    <!--
+    <script defer src="js/plugins.js"></script>
+    -->
+    <script defer src="js/script.js"></script>
+    <script src="js/CustomTooltip.js"></script>
+<!--    <script src="js/d3.csv.min.js"></script>
+		<!--
+    <script src="js/libs/coffee-script.js"></script>
+    <script src="js/libs/d3.geom.min.js"></script>
+		-->
+    <script type="text/javascript" src="js/vis4.js"></script>
+		<script type="text/javascript" src="js/jquery.sumoselect.min.js"></script>
+    <script type="text/javascript" src="js/lodash_2.4.1.js"></script>
+    <script type="text/javascript" src="js/libs/queue.v1.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var controlsVisible = true;
+            $('#right-sidebar-container').click(function() {
+                controlsVisible = ! controlsVisible;
+                if (controlsVisible)
+                    $('#right-sidebar-color-container').slideDown('fast');
+                else 
+                    $('#right-sidebar-color-container').slideUp('fast');
+            });
+        });
+				
+				$(document).ready(function(){
+				  $(".trigger").click(function(){
+					  $(".panel").toggle("fast");
+						$(this).toggleClass("active");
+						return false;
+					});
+				});
+				
+//				$(document).ready(function () {
+//              $('.testselect3').SumoSelect({ placeholder: 'Suodata hankkeita kohderyhm&auml;n mukaan' });
+//							$('.testselect3').SumoSelect({ placeholder: 'Suodata hankkeita kohderyhm&auml;n mukaan' , okCancelInMulti: true, triggerChangeCombined: false });
+//        });
+				
+//				  var MySelect;
+//			  $(document).ready(function () {
+//            MySelect = $('.testselect3').SumoSelect();
+//         });
+//				
+//				$(function() {
+//										 $("#search").click(function() {
+//										 			if ($("#search").val() == "Etsi hanketta nimelt&auml;"){
+//													  $("#search").val(""); 
+//													}
+//										 });
+//				});
+
+        var initialise_form = function (selectionOptions) {
+
+
+            var colorSelect = $('#color-everything-by');
+            for (var opt in selectionOptions) {
+                var lookup = selectionOptions[opt];
+                colorSelect.append('<option value="' + lookup.key + '">' + lookup.title + '</option>');
+            }
+            var ResetColors = function () {
+                var colorBy = colorSelect.val();
+                console.log(colorBy);
+                color_by(colorBy);
+            };
+
+
+            colorSelect.change(ResetColors);
+
+
+        };
+
+        function get_distinct_values(records, keyType, key) {
+            var allValues = {};
+            for (var i in records) {
+                var value = records[i][key];
+                allValues[value] = true;
+            }
+
+            var allValuesArray = [];
+            for (var i in allValues)
+                allValuesArray.push(i);
+
+            if (keyType == 'testi1')
+                allValuesArray.sort(function (a, b) { return Number(a) - Number(b); });
+            else
+                allValuesArray.sort();
+            return allValuesArray
+        }
+
+        function keyToLookup(key) {
+            var firstPartEnds = key.indexOf('_');
+            if (firstPartEnds <= 0)
+                return { key: key, type: key, title: key };
+
+            var firstPart = key.substring(0, firstPartEnds);
+            var secondPart = key.substring(firstPartEnds + 1);
+
+            return { key: key, type: firstPart, title: secondPart };
+        }
+<!--        function render_filters_colors_and_groups(csv) { -->
+        function render_colors(records) { 
+            var first = records[0];
+            var lookups = [];
+            for (var key in first) {
+                var lookup = keyToLookup(key);
+                switch (lookup.type) {
+                    case "Lookup":
+                    case "offi":
+                    case "Testi2":
+                        lookups.push(lookup);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
+            initialise_form(lookups);
+        }
+
+        function hide_color_chart() {
+//            var right = $('#right-sidebar');
+						var right = $('#right-sidebar-toggle');
+            var rightContainer = $('#right-sidebar-color-container');
+            rightContainer.fadeOut(500, function () {
+                rightContainer.empty();
+            });
+        }
+        function show_color_chart(what_to_color_by, color_mapper) {
+//            var right = $('#right-sidebar');            
+						var right = $('#right-sidebar-toggle');
+            rightContainer = $('#right-sidebar-color-container');
+            right.fadeOut(500, function () {
+               rightContainer.empty();
+
+//                var lookup = keyToLookup(what_to_color_by);
+//                $('<h3>' + lookup.title + '</h3>').appendTo(rightContainer);
+
+                var table = $('<table />');
+                for (var key in color_mapper) {
+                    var row = $('<tr/>');
+
+                    var cell = $('<td/>');
+                    var square = $('<div style="width: 15px; height: 15px; background: ' + color_mapper[key] + ';">&nbsp;</div>');
+                    square.appendTo(cell);
+                    cell.appendTo(row);
+
+                    cell = $('<td/>');
+                    cell.text(' ' + key + ' ');
+                    cell.appendTo(row);
+                    row.appendTo(table);
+                }
+
+                table.appendTo(rightContainer);
+//                right.fadeIn(500);
+//								right.fadeIn(0);
+            });
+        }
+		window.onload = function(){ 
+			//Get submit button
+			var submitbutton = document.getElementById("search");
+			//Add listener to submit button
+			if(submitbutton.addEventListener){
+			  submitbutton.addEventListener("click", function() {
+				  if (submitbutton.value == 'Etsi hanketta'){//Customize this text string to whatever you want
+					  submitbutton.value = '';
+			    }
+		    });
+	    }
+    }
+			
+			$(document).ready(function() {
+//			  $(".chzn-select").chosen();
+      $(document).ready(function() {
+			   $('.control-links a').click(function() {
+              $(this).siblings().removeClass('active');
+              $(this).addClass('active');
+              });
+//			 $(".chzn-select").chosen();
+		   $('#view_by a').click(function() {
+            var view_by = $(this).attr('id');
+            $('#view_by a').removeClass('active');
+            $(this).toggleClass('active');
+            toggle_size(view_by);
+            return false;
+          });
+			 $('#hvuosis a').click(function() {
+              var new_options = {"hvuosi": $(this).attr("id")};
+              update_options(new_options);
+              });
+        });
+			 if (document.documentElement.clientWidth > 1000 < 1200) {
+        document
+            .querySelector("meta[name=viewport]")
+            .setAttribute('content', 'initial-scale=0.78');
+        }
+        if (document.documentElement.clientWidth < 999) {
+        document
+            .querySelector("meta[name=viewport]")
+            .setAttribute('content', 'initial-scale=0.58');
+        }
+				if (document.documentElement.clientWidth < 400) {
+        document
+            .querySelector("meta[name=viewport]")
+            .setAttribute('content', 'initial-scale=0.25');
+        }
+//			$(document).ready(function() {	
+//			 $('.testselect3').SumoSelect({ okCancelInMulti: true ,
+//			                                 triggerChangeCombined: false
+//		                               });
+//			});
+			
+    });
+  </script>
+    <script>
+//     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+//      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+//      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+//      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+//
+//      ga('create', 'UA-50186636-1', 'test.github.io');
+//      ga('send', 'pageview');
+//
+    </script> 
+
+  </body>
+</html>
