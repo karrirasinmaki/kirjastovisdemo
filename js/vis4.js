@@ -40,7 +40,7 @@
       this.get_color_map_Lookup_Kieli = __bind(this.get_color_map_Lookup_Kieli, this);
       this.get_color_map_Lookup_Teema = __bind(this.get_color_map_Lookup_Teema, this);
       this.get_color_map_achievement = __bind(this.get_color_map_achievement, this);
-			
+
       var max_amount;
       this.data = data;
 //      this.width = 1350;
@@ -122,12 +122,12 @@
         };
       })(this));
     };
-		
+
 		BubbleChart.prototype.update_data = function() {
 			data = raw_records;
 			filter_hvuosi(root.options.hvuosi);
 		};
-		
+
 //    BubbleChart.prototype.update_data = function(records) {
 //      var func;
 //      this.kill_forces();
@@ -164,6 +164,24 @@
       var that;
       that = this;
 			 if ('ontouchstart' in document.documentElement) { /* JavaScript for your touch interface */
+
+         var activeCirce = {d: undefined, i: undefined, elem: undefined, isActive: false};
+         var hideDetailsOnOffClick = function(d, i, elem) {
+           activeCirce.d = d;
+           activeCirce.i = i;
+           activeCirce.elem = elem;
+           activeCirce.isActive = true;
+         };
+         var hideDetails = function() {
+           that.hide_details(activeCirce.d, activeCirce.i, activeCirce.elem);
+           activeCirce.isActive = false;
+         };
+          $("body").on("click", function(evt) {
+            if (evt.target.tagName != "circle" && evt.target.id != "my_tooltip") {
+              hideDetails();
+            }
+          });
+
 			  this.circles.enter().append("circle").attr("r", 0).attr("opacity", 1).style("fill", (function(_this) {
          return function(d) {
            return '#cfcfcf'; // harmaa
@@ -176,23 +194,13 @@
         })(this)).attr("id", function(d) {
          return "bubble_" + d.id;
 			  }).on("click", function(d, i) {
-         that.show_details(d, i, this);
-				 if (!$(i).is(e.target) // if the target of the click isn't the container...
-            && $(i).has(e.target).length === 0) // ... nor a descendant of the container
-        {
-            that.hide_details(d, i, this);
-        }
-//        }).on("mouseout", function(d, i) {
-//         that.hide_details(d, i, this);
-//        }).on("click", function(d, i) {
-//			   var url;
-//           url = "http://";
-//					 if(window.Touch) { /* JavaScript for your touch interface */ 
-//             url += d.link;
-//					 } else {
-//					   url += d.link+"?language=sv";
-//					 }
-//           window.open(url);
+          if (activeCirce.isActive) {
+            hideDetails();
+          }
+          else {
+            that.show_details(d, i, this);
+            hideDetailsOnOffClick(d,i,this);
+          }
         }).attr("r", function(d) {
          return d.radius;
         });
@@ -214,7 +222,7 @@
         }).on("click", function(d, i) {
 			   var url;
            url = "http://";
-					 if(window.Touch) { /* JavaScript for your touch interface */ 
+					 if(window.Touch) { /* JavaScript for your touch interface */
              url += d.link;
 					 } else {
 					   url += d.link+"?language=sv";
@@ -532,7 +540,7 @@
         return d3.format(',.2f')(amount_in_millions) + ' milj. euroa';
       }
     };
-		
+
 		BubbleChart.prototype.format_kappale = function(amount_kappaleet) {
       var amount_kpl_yhteensa;
       amount_kpl_yhteensa = amount_kappaleet;
@@ -540,7 +548,7 @@
         return "1 hanke";
       } else {
 //        return d3.format(',.2f')(amount_in_millions2) + ' kappaletta';
-				return (amount_kpl_yhteensa) + ' hanketta';				
+				return (amount_kpl_yhteensa) + ' hanketta';
       }
     };
 
@@ -606,7 +614,7 @@
 				  return d3.descending(parseFloat(groups.get(a).sum), parseFloat(groups.get(b).sum));
 			  }
           };
-			  
+
 //      sort = options.sort != null ? options.sort : function(a, b) {
 //			  if (func === 'kunta') {
 //          return d3.ascending(parseFloat(groups.get(a).sum), parseFloat(groups.get(b).sum));
@@ -691,7 +699,7 @@
 //          element.style("fill", "#F38630").style("stroke-width", 2.0).style("stroke", "#555");
 //					element.style("stroke-width", 4.0).style("stroke", "#000000");  //  #000000
 //					element.style("stroke-width", 1.0).style("opacity", 1);
-          element.style("stroke-width", 4.0).style("stroke", "#000000");  //  #000000 
+          element.style("stroke-width", 4.0).style("stroke", "#000000");  //  #000000
 //					element.style("stroke-width", 4.0).style("stroke", "#000000");
           return d.searched = true;
         } else {
@@ -700,8 +708,10 @@
         }
       });
     };
-		
+
+    /*
 		BubbleChart.prototype.updateSearchx = function(searchtesti) {
+      console.log(searchtesti);
 			var searchRegEx;
 			searchRegEx = new RegExp(searchtesti.toLowerCase());
       return this.circles.each(function(d) {
@@ -721,13 +731,43 @@
         }
       });
     };
-		
+    */
+
+		BubbleChart.prototype.updateSearchx = function(searchtestiArr) {
+      return this.circles.each(function(d) {
+
+        var element, match;
+        element = d3.select(this);
+
+        match = (function() {
+          for (var i=0, l=searchtestiArr.length; i<l; ++i) {
+            var searchRegEx = new RegExp(searchtestiArr[i].toLowerCase());
+            if (d.kohderyhma.toLowerCase().search(searchRegEx) < 0) return false;
+          }
+          return true;
+        })();
+
+
+        if (match) {
+//					element.style("stroke-width", 2.0).style("opacity", 1);
+          element.attr("r", function(d) {
+          return d.radius;
+					});
+          return d.searched = true;
+        } else {
+          d.searched = false;
+//					  element.style("stroke-width", 2.0).style("opacity", 0);
+            element.attr("r", 0);
+        }
+      });
+    };
+
 //		BubbleChart.prototype.updateSearchx = function(searchTermx) {
 //		BubbleChart.prototype.updateSearchx = function(searchtesti) {
 //      var regex;
 //      var regex;
 //			var comma = "x";
-//			var regex = /(searchtesti)/gi; 
+//			var regex = /(searchtesti)/gi;
 //      var testi = searchtesti.split(",");
 //      regex = new RegExp(testi);
 //			regex = new RegExp(searchtesti);
@@ -735,18 +775,18 @@
 //			return this.circles.each(function(d) {
 //			   var element, match;
 //         element = d3.select(this);
-//		     if(regex.test(d.kohderyhma2.toLowerCase())) { 
-//			     var matches = d.kohderyhma2.toLowerCase().match(regex); 
-//		       for(var match in matches) { 
+//		     if(regex.test(d.kohderyhma2.toLowerCase())) {
+//			     var matches = d.kohderyhma2.toLowerCase().match(regex);
+//		       for(var match in matches) {
 //					 element.style("stroke-width", 1.0).style("opacity", 1);
-//           return d.searched = true; 
-//			   } 
-//		     } else { 
+//           return d.searched = true;
+//			   }
+//		     } else {
 //		       d.searched = false;
-//				     element.style("stroke-width", 1.0).style("opacity", 0.1); 
+//				     element.style("stroke-width", 1.0).style("opacity", 0.1);
 //		     }
-//			});	 
-//		};	
+//			});
+//		};
 //			var searchRegEx;
 //			var word;
 //      searchRegEx1 = "vanhukset;"+" nuoret";
@@ -773,10 +813,11 @@
 //        }
 //      });
 //    };
-		
-		
-		
+
+
+
     BubbleChart.prototype.show_details = function(data, i, element) {
+      var url = "http://" + data.link;
       var content;
 //			if ('ontouchstart' in document.documentElement) {
       d3.select(element).attr("stroke", "red");
@@ -784,7 +825,7 @@
 //      content = "<div class=\"inner_tooltip\">";
 //        content = "<span class=\"name\">" + title + ":</span><span class=\"value\"> " + value + "</span><br/>";
 				content = "<span class=\"name\">" + data.name + "</span><br/><br/>";
-//				if ('ontouchstart' in document.documentElement) { /* JavaScript for your touch interface */ 
+//				if ('ontouchstart' in document.documentElement) { /* JavaScript for your touch interface */
 //				content += "<span class=\"name\">Toteuttajan nimi:</span><span class=\"href\"> "<+ data.link + "</span><br/>";
 //				content += "<span class=\"name\">Linkki:</span><a href="www.hankevis.net"> + formatTime(d.date) +"</a>" + "<br/>";
 //				}
@@ -804,6 +845,7 @@
 //				content += "<span class=\"name\">P&auml;&auml;ttymis pvm:</span><span class=\"value\"> " + data.lpvm + "</span><br/>";
 //				content += "<span class=\"name\">Budjetti:</span><span class=\"value\"> " + (addCommas(data.value)) + " euroa" + "</span><br/>";
 				content += "<span class=\"name\">My&ouml;nnetty avustus:</span><span class=\"value\"> " + (addCommas(data.value)) + " euroa" + "</span><br/>";
+        if ('ontouchstart' in document.documentElement) content += "<br><a href='" + url + "' target='_blank'>Avaa</a>";
 //        content += "</div>";
 //			}
         this.tooltip.showTooltip(content, d3.event);
@@ -819,7 +861,7 @@
         }
       });
 		};
-		
+
 		BubbleChart.prototype.hide_details = function(data, i, element) {
       d3.select(element).attr("stroke", '#404040');
       return this.tooltip.hideTooltip();
@@ -872,37 +914,37 @@
       value = allValuesArray[_i];
       switch (value) {
         case "Digitointi":
-          color_map[value] = '#fdbf6f'; 
+          color_map[value] = '#fdbf6f';
           break;
-        case "Henkilöstön osaaminen":
-          color_map[value] = '#ff7f00'; 
+        case "HenkilÃ¶stÃ¶n osaaminen":
+          color_map[value] = '#ff7f00';
           break;
         case "Kokoelmat":
-          color_map[value] = '#ffff99'; 
+          color_map[value] = '#ffff99';
           break;
 				case "Laitehankinnat":
-          color_map[value] = '#b2df8a'; 
+          color_map[value] = '#b2df8a';
           break;
-				case "Lukemisen edistäminen":
-          color_map[value] = '#33a02c'; 
+				case "Lukemisen edistÃ¤minen":
+          color_map[value] = '#33a02c';
           break;
 				case "Mediaskasvatus":
           color_map[value] = '#cab2d6';
           break;
-				case "Oppimisympäristö ja yhteisöllisyys":
+				case "OppimisympÃ¤ristÃ¶ ja yhteisÃ¶llisyys":
           color_map[value] = '#a6cee3';
           break;
-				case "Palvelujen kehittäminen":
+				case "Palvelujen kehittÃ¤minen":
           color_map[value] = '#1f78b4';
           break;
-				case "Strateginen kehittäminen":
+				case "Strateginen kehittÃ¤minen":
           color_map[value] = '#6a3d9a';
           break;
 				case "Tilasuunnittelu":
-          color_map[value] = '#fb9a99'; 
+          color_map[value] = '#fb9a99';
           break;
 				case "Verkkopalvelut":
-          color_map[value] = '#e31a1c'; 
+          color_map[value] = '#e31a1c';
           break;
         default:
           color_map[value] = '#DA635D';
@@ -917,14 +959,14 @@
 //    baseArray = ["#98df8a", "#d62728", "#1f77b4", "#f7b6d2", "#7f7f7f", "#ffbb78", "#2ca02c", "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#FFFF33", "#e377c2", "#aec7e8", "#ff7f0e", "#00FF00", "#E00000", "#00FFFF"];
 //    baseArray = ["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
 //    baseArray = ["#393b79", "#5254a3", "#6b6ecf", "#9c9ede", "#637939", "#8ca252", "#b5cf6b", "#cedb9c", "#8c6d31", "#bd9e39", "#e7ba52", "#e7cb94", "#843c39", "#ad494a", "#d6616b", "#e7969c", "#7b4173", "#a55194", "#ce6dbd", "#de9ed6"];
-//    baseArray = ["#51574a", "#447c69", "#74c493", "#e2975d", "#f19670", "#e16552", "#c94a53", "#be5168", "#a34974", "#993767", "#65387d", "#4e2472", "#9163b6", "#e279a3", "#e0598b", "#7c9fb0", "#5698c4", "#9abf88"];  
-//		baseArray = ["#ff0400", "#00e66b", "#ffe380", "#b6c3f2", "#46394d", "#73321d", "#403e00", "#79f2d0", "#0020f2", "#fd80ff", "#ff8f40", "#ddff00", "#00474d", "#000659", "#590027", "#8c7a69", "#16592e", "#00b6f2", "#7979f2", "#ff80a8"]; 
+//    baseArray = ["#51574a", "#447c69", "#74c493", "#e2975d", "#f19670", "#e16552", "#c94a53", "#be5168", "#a34974", "#993767", "#65387d", "#4e2472", "#9163b6", "#e279a3", "#e0598b", "#7c9fb0", "#5698c4", "#9abf88"];
+//		baseArray = ["#ff0400", "#00e66b", "#ffe380", "#b6c3f2", "#46394d", "#73321d", "#403e00", "#79f2d0", "#0020f2", "#fd80ff", "#ff8f40", "#ddff00", "#00474d", "#000659", "#590027", "#8c7a69", "#16592e", "#00b6f2", "#7979f2", "#ff80a8"];
 //		baseArray = ["#ff8c8c", "#a7ff8c", "#8ca3ff", "#689451", "#945177", "#ffc88c", "#8cffd1", "#ba8cff", "#51947d", "#ffad8c", "#8cfdff", "#945651", "#518b94", "#ffe08c", "#ff8cde", "#947a51", "#517394", "#f2ff8c", "#8ccbff", "#949251", "#515694"];
 		baseArray = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#bf812d", "#ff7f00", "#cab2d6", "#6a3d9a", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd"];
 //		baseArray = ["#33FF1D", "#FF0D29", "#326FCC", "#CCFF2A", "#FF8810","#BA30FF", "#6EFFCE","#008000", "#EA8BFF", "#CCB780","#A1B2AD", "#B2054B", "#4DB20A","#FFF9DD","#05B2B1", "#FFF969", "#00FF63", "#B89FCC", "#A02820"];
 //																		 						keltainen  oranssi
 //		baseArray = ["#008000", "FF0000", "#0000FF", "#FFFF00", "#F080F0", "#FFA000", "#FFFFFF", "#00FFFF", "#A02820", "#80FF00", "#808080", "#008080", "#800000", "#FF00FF", "#000000", "#00FF00", "#000080", "#808000", "#800080", "#C0C0C0"];
-//						   vihre�,    punainen    sininen   keltainen   violetti  oranssi  valkoinen      aqua      ruskea  haaleanvihre� harmaa    teal       maroon      fuchsia    musta      lime       navy      oliivi      purple    hopea
+//						   vihreä,    punainen    sininen   keltainen   violetti  oranssi  valkoinen      aqua      ruskea  haaleanvihreä harmaa    teal       maroon      fuchsia    musta      lime       navy      oliivi      purple    hopea
 		index = 0;
     color_map = {};
     for (_i = 0, _len = allValuesArray.length; _i < _len; _i++) {
@@ -1039,7 +1081,7 @@
 
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
-	
+
 	root.options = {
   hvuosi: "all",
   };
@@ -1067,8 +1109,8 @@
       }
       return full_records;
     };
-		
-		
+
+
     filter_data = function(records, year) {
       var filtered_csv, reduced, sorted;
       filtered_csv = records.filter(function(d) {
@@ -1172,8 +1214,8 @@
       return function() {
         return chart;
     };
-    
-		
+
+
     })(this);
 		root.color_by = (function(_this) {
       return function(colorBy) {
@@ -1184,7 +1226,7 @@
         }
       };
 		})(this);
-		
+
 //		root.filter_hvuosi = (function(_this) {
 //      return function(colorBy) {
 //        if (colorBy === '') {
@@ -1194,7 +1236,7 @@
 //        }
 //      };
 //		})(this);
-		
+
     $('#viz_nav_container .viz_nav').on('click', function(e) {
       var $viz_nav, currentFunc, func;
       e.preventDefault();
@@ -1226,25 +1268,39 @@
         return window.update_year(false);
       }
     });
-		
+
 		$("#search").keyup(function() {
       var searchTerm;
       searchTerm = $(this).val();
       return chart.updateSearch(searchTerm);
     });
-		
-		$(".chosen-select").chosen(function() {
+
+		$(".chosen-select").chosen(function(evt, params) {
 	//	  var searchtesti;
 	//		searchtesti = $(".chosen-select").val();
 //			return chart.updateSearchx(searchtesti);
-//			}).get();			
+//			}).get();
 //				if (searchtesti.length > 0 !== undefined) {
 //            $("#str").html("some_search_script.php?cat="+searchTermx.join(", "));
 //						$("#str").html("some_search_script.php?cat="+searchtesti);
 //        }
     });
-		
 
+
+    $('.chosen-select').change(function(evt, params){
+      var vals = $(this).val() || [];
+      console.log(vals);
+      var valsString = "";
+      var searchtesti = vals;
+      if (vals.length > 0) {
+        valsString = vals.join(", ");
+      }
+      $('#str').html(valsString);
+      return chart.updateSearchx(searchtesti);
+//      });
+    });
+
+    /*
     $('.chosen-select').change(function(){
 			 var searchtesti;
 //		 searchtesti = $(".chosen-select").val();
@@ -1253,8 +1309,9 @@
 			 return chart.updateSearchx(searchtesti);
 //      });
     });
-		
-		
+    */
+
+
 //		$('#myForm input').on('change', function() {
 //		  var searchTermx;
 //			var searchTermy;
@@ -1266,21 +1323,21 @@
 //			return chart.updateSearchx(searchTermy);
 //			return chart.updateSearchx(searchTermz);
 //    });
-		
+
 //		$("#myForm input").click(function () {
 //        var searchTermx;
 //				var searchtesti;
 //				var searchTermx = $('input[name=radioName]:checked').map(function (_, el) {
-//						return $(el).val();						 
+//						return $(el).val();
 //        }).get();
-//				var searchTermx = document.getElementById("myForm").value;	
+//				var searchTermx = document.getElementById("myForm").value;
 // //           $("#str").html("some_search_script.php?cat="+searchTermx.join(", "));
 //						$("#str").html("some_search_script.php?cat="+searchTermx);
 //        }
 //        var searchtesti = (searchTermx.join(","));
 //				return chart.updateSearchx(searchtesti);
 //    });
-		
+
 //    root.color_by = (function(_this) {
 //      return function(colorBy) {
 //        if (colorBy === '') {
